@@ -1,9 +1,13 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { nanoid } from "nanoid";
+import { useDispatch } from "react-redux";
+import { addContact } from "../../redux/contactsSlice";
 import css from "./ContactForm.module.css";
 
-const ContactForm = ({ addContact }) => {
+const ContactForm = () => {
+  const dispatch = useDispatch();
+
   const validationSchema = Yup.object().shape({
     name: Yup.string()
       .min(3, "Too Short!")
@@ -20,7 +24,7 @@ const ContactForm = ({ addContact }) => {
       initialValues={{ name: "", number: "" }}
       validationSchema={validationSchema}
       onSubmit={(values, { resetForm }) => {
-        addContact({ id: nanoid(), ...values });
+        dispatch(addContact({ id: nanoid(), ...values }));
         resetForm();
       }}
     >
@@ -38,7 +42,7 @@ const ContactForm = ({ addContact }) => {
           <Field
             className={css.input}
             name="number"
-            type="text"
+            type="number"
             placeholder="Phone number"
           />
           <ErrorMessage className={css.error} name="number" component="div" />
